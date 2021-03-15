@@ -77,6 +77,8 @@ public class Main {
 //        
 //        students.get(1).setAnswers(answersB);
 //        students.get(9).setAnswers(answersB);
+        
+        long timeStart = System.currentTimeMillis();
 
         students.forEach(student -> possibleCheaters.addAll(checkNeighbors(students, student)));
         
@@ -85,6 +87,10 @@ public class Main {
         	System.out.println("List of possible cheaters\n");
         	possibleCheaters.forEach(student -> System.out.println(student + "\n"));
         }
+        
+        long timeStop = System.currentTimeMillis();
+        
+        System.out.println("Time taken: " + (timeStop - timeStart) + " ms");
        
     }
     
