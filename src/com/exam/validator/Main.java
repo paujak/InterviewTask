@@ -8,8 +8,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -62,12 +64,28 @@ public class Main {
 
     public static void main(String[] args) {
         List<Student> students = CSVReader.parse();
+        Set<Student> possibleCheaters = new HashSet<>();
         
-        System.out.println(students.get(7));
-        System.out.println();
+//        For testing purposes
+//        Map<Integer, String> answers = new HashMap<>(students.get(22).getAnswers());
+//        
+//        students.get(9).setAnswers(answers);
+//        students.get(23).setAnswers(answers);
+//        students.get(8).setAnswers(answers);
+//        
+//        Map<Integer, String> answersB = new HashMap<>(students.get(0).getAnswers());
+//        
+//        students.get(1).setAnswers(answersB);
+//        students.get(9).setAnswers(answersB);
+
+        students.forEach(student -> possibleCheaters.addAll(checkNeighbors(students, student)));
         
-        checkNeighbors(students, students.get(7));
-        
+        if (possibleCheaters.size() == 0) System.out.println("No possible cheaters found");
+        else {
+        	System.out.println("List of possible cheaters\n");
+        	possibleCheaters.forEach(student -> System.out.println(student + "\n"));
+        }
+       
     }
     
   
@@ -98,11 +116,14 @@ public class Main {
     	return null; 
     }
     
+    public static boolean sitsInSameRow (Student studentA, Student studentB) {
+    		
+    	return (locToInt(studentA.getSittingLocation())[0] == locToInt(studentB.getSittingLocation())[0]); 
+    }
     
-    
-    public static List<Student> checkNeighbors(List<Student> students, Student student){
+    public static Set<Student> checkNeighbors(List<Student> students, Student student){
     	
-    	List<Student> possibleCheaters = new ArrayList<>();
+    	Set<Student> possibleCheaters = new HashSet<>();
     	int[] loc = locToInt(student.getSittingLocation());
     	
     	List<Student> neighbors = new ArrayList<>();
@@ -113,8 +134,14 @@ public class Main {
     	neighbors.add(getStudent(students, locToStr(loc[0]-1, loc[1]+1))); // adding neighbor to the below right
     	neighbors.add(getStudent(students, locToStr(loc[0], loc[1]+1))); // adding neighbor to the right
     	
-    	neighbors.forEach(studentas -> System.out.println(studentas));
-    	    			
+    	neighbors.forEach(neighboringStud -> { 
+    		if (neighboringStud != null && student.getAnswers().equals(neighboringStud.getAnswers())) {
+    			possibleCheaters.add(student);
+    			if (sitsInSameRow(student, neighboringStud))
+    				possibleCheaters.add(neighboringStud);
+    		}
+    	});
+    	    	    			
     	return possibleCheaters;
     }
         
@@ -155,7 +182,7 @@ class Student {
 
 	@Override
 	public String toString() {
-		return "Student [name=" + name + ", sittingLocation=" + sittingLocation + ", answers=" + answers + "]";
+		return "Student: " + name + "\nSitting Location: " + sittingLocation + "\nAnswers\n" + answers;
 	}
 
 }
