@@ -63,6 +63,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		List<Student> students = CSVReader.parse();
+        Set<Student> possibleCheaters = new HashSet<>();
 
 //	Sorts students list according to their seating position (accending order 1.1, 1.2 ... 2.1, 2.2 ...
 		students.sort(new Comparator<Student>() {
@@ -82,14 +83,32 @@ public class Main {
 					return 1;
 			}
 		});
+        
+//      For testing purposes
+//      Map<Integer, String> answers = new HashMap<>(students.get(22).getAnswers());
+//      
+//      students.get(9).setAnswers(answers);
+//      students.get(23).setAnswers(answers);
+//      students.get(8).setAnswers(answers);
+//      
+//      Map<Integer, String> answersB = new HashMap<>(students.get(0).getAnswers());
+//      
+//      students.get(1).setAnswers(answersB);
+//      students.get(9).setAnswers(answersB);
+      
+      long timeStart = System.currentTimeMillis();
 
-//		students.forEach(student -> System.out.println(student));
-
-		check(toMatrix(students)).forEach(possibleCheater -> {
-			
-			
-			
-		});
+      possibleCheaters = check(toMatrix(students));
+		
+      if (possibleCheaters.size() == 0) System.out.println("No possible cheaters found");
+      else {
+      	System.out.println("List of possible cheaters\n");
+      	possibleCheaters.forEach(student -> System.out.println(student + "\n"));
+      }		
+      
+      long timeStop = System.currentTimeMillis();
+      
+      System.out.println("Time taken: " + (timeStop - timeStart) + " ms");
 
 	}
 
