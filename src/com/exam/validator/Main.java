@@ -63,7 +63,10 @@ public class Main {
     public static void main(String[] args) {
         List<Student> students = CSVReader.parse();
         
-       
+        System.out.println(students.get(7));
+        System.out.println();
+        
+        checkNeighbors(students, students.get(7));
         
     }
     
@@ -87,7 +90,7 @@ public class Main {
 	
 //	Returns particular student in sitting location
 	
-    public static Student comparableStudent(List<Student> students, String position) {
+    public static Student getStudent(List<Student> students, String position) {
     	
     	for (Student student : students) {
     		if (student.getSittingLocation().equals(position)) return student;
@@ -102,11 +105,19 @@ public class Main {
     	List<Student> possibleCheaters = new ArrayList<>();
     	int[] loc = locToInt(student.getSittingLocation());
     	
+    	List<Student> neighbors = new ArrayList<>();
+    	    	
+    	neighbors.add(getStudent(students, locToStr(loc[0], loc[1]-1))); // adding neighbor to the left
+    	neighbors.add(getStudent(students, locToStr(loc[0]-1, loc[1]-1))); // adding neighbor to the below left
+    	neighbors.add(getStudent(students, locToStr(loc[0]-1, loc[1]))); // adding neighbor directly below
+    	neighbors.add(getStudent(students, locToStr(loc[0]-1, loc[1]+1))); // adding neighbor to the below right
+    	neighbors.add(getStudent(students, locToStr(loc[0], loc[1]+1))); // adding neighbor to the right
     	
-    			
+    	neighbors.forEach(studentas -> System.out.println(studentas));
+    	    			
     	return possibleCheaters;
     }
-    
+        
 }
 
 class Student {
