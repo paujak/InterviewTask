@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +62,83 @@ public class Main {
 
     public static void main(String[] args) {
         List<Student> students = CSVReader.parse();
+        
+//	Sorts students list according to their seating position (accending order 1.1, 1.2 ... 2.1, 2.2 ...
+        students.sort(new Comparator<Student>() {
+
+			@Override
+			public int compare(Student o1, Student o2) {
+				if (posX(o1) == posX(o2))
+					if (posY(o1) < posY(o2)) return -1;
+					else if (posY(o1) > posY(o2)) return 1;
+					else return 0;
+				else if (posX(o1) < posX(o2)) return -1;
+				else return 1;
+			}
+        });
+        
+        students.forEach(student -> System.out.println(student));
+
+        toMatrix(students);
+        
+        
+    }
+    
+  
+    
+//    Returns sitting row number in integer 
+    
+    public static int posX (Student student) {
+    	return Integer.parseInt(student.getSittingLocation().split("\\.")[0]);
+    }
+    
+//  Returns sitting position in row in integer 
+    
+	public static int posY (Student student) {
+		return Integer.parseInt(student.getSittingLocation().split("\\.")[1]);
+	}	
+    
+//	Creating two dimensional arrayList, which represents student seating in auditorium
+	
+    public static ArrayList<ArrayList<Student>> toMatrix(List<Student> students){
+    	
+    	int numberOfRows = posX(students.get(students.size() - 1));
+    	
+    	ArrayList<ArrayList<Student>> studentsMatrix = new ArrayList<>(numberOfRows);
+    	System.out.println(numberOfRows);
+    	
+//   Initializing rows
+    	
+    	for (int i = 0; i < numberOfRows; i ++) {
+    		studentsMatrix.add(new ArrayList<>());
+    	}
+    	
+//    	Adding students to rows
+    	
+    	students.forEach(student ->{
+    		int x = posX(student)-1;
+    		int y = posY(student)-1;
+
+//    		Checks if there is empty seating
+    		
+    		if (y > studentsMatrix.get(x).size()) {
+    			studentsMatrix.get(x).add(null);
+    			studentsMatrix.get(x).add(student);
+    		}
+    		else studentsMatrix.get(x).add(student);
+    	});
+    	
+    	for (int i = 0; i < studentsMatrix.size(); i++) {
+    		for (int j = 0; j < studentsMatrix.get(i).size(); j++) {
+    			if (studentsMatrix.get(i).get(j) != null) 
+    			System.out.print(studentsMatrix.get(i).get(j).getSittingLocation() + "   ");
+    			else System.out.print("nul   ");
+    		}
+    		System.out.println("\n");
+    	}
+    	
+    	return studentsMatrix;
+    	
     }
 }
 
@@ -94,6 +174,11 @@ class Student {
         this.answers = answers;
         return this;
     }
+
+	@Override
+	public String toString() {
+		return "Student [name=" + name + ", sittingLocation=" + sittingLocation + ", answers=" + answers + "]";
+	}
 
 }
 
