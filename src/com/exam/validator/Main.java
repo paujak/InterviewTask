@@ -8,8 +8,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -81,87 +83,101 @@ public class Main {
 			}
 		});
 
-		students.forEach(student -> System.out.println(student));
+//		students.forEach(student -> System.out.println(student));
 
 		check(toMatrix(students)).forEach(possibleCheater -> {
-			System.out.println(possibleCheater);
-		}); 
+			
+			
+			
+		});
 
 	}
 
-	public static ArrayList<Student> check(ArrayList<ArrayList<Student>> students) {
+	public static Set<Student> check(ArrayList<ArrayList<Student>> students) {
 
-		ArrayList<Student> suspicious = new ArrayList<>();
+		Set<Student> suspicious = new HashSet<>();
 
 		int numberOfRows = students.size();
 
 		for (int i = 0; i < numberOfRows; i++) {
 			int lastTakenSeat = students.get(i).size() - 1;
-			System.out.println(lastTakenSeat + " were taken in " + i + " row");
 
 			for (int j = 0; j <= lastTakenSeat; j++) {
 
 				Student studentX = students.get(i).get(j);
-				
-				System.out.println(studentX);
 
-				if (j != 0) {// Checks if it's not the leftmost seat
-					
-					if (students.get(i).get(j - 1) != null && // Checks if student to the LEFT exists
-							studentX.getAnswers().equals(students.get(i).get(j - 1).getAnswers())) {// if so, compares
-																									// their
-																									// answers
-						suspicious.add(studentX);
-						suspicious.add(students.get(i).get(j - 1)); // Add also student to the LEFT as she/he also has
-					} // cheating possibility
-					
-					if (i > 0) { // Check if it is not the first row, if not, then check students below
-						if (students.get(i + 1).get(j - 1) != null && // Checks if student to the BELOW LEFT exists
-								studentX.getAnswers().equals(students.get(i).get(j - 1).getAnswers())) // if so,
+				if (studentX != null) {
+
+					if (j != 0) {// Checks if it's not the leftmost seat
+
+						if (students.get(i).get(j - 1) != null && // Checks if student to the LEFT exists
+								studentX.getAnswers().equals(students.get(i).get(j - 1).getAnswers())) {// if so,
 																										// compares
-																										// their answers
+																										// their
+																										// answers
 							suspicious.add(studentX);
-					
-					if (students.get(i - 1).get(j) != null && // Checks if student DIRECTLY BELOW exists and, if so,
-																// compares their answers
-							studentX.getAnswers().equals(students.get(i - 1).get(j).getAnswers()))
-						suspicious.add(studentX);
-					
-					if (j != lastTakenSeat && students.get(i - 1).get(j + 1) != null && // Checks if student to the BELOW RIGHT exists and, if
-																	// so, compares their answers
-							studentX.getAnswers().equals(students.get(i - 1).get(j + 1).getAnswers()))
-						suspicious.add(studentX);
-					}
-				} 
-				
-				if (j != lastTakenSeat) { // Checks if it's not the rightmost seat
-				
-					if (students.get(i).get(j + 1) != null && // Checks if student to the RIGHT exists
+							suspicious.add(students.get(i).get(j - 1)); // Add also student to the LEFT as she/he also
+																		// has
+						} // cheating possibility
 
-							studentX.getAnswers().equals(students.get(i).get(j + 1).getAnswers())) {// if so, compares
-																									// their
-																									// answers
-						suspicious.add(studentX);
-						suspicious.add(students.get(i).get(j + 1)); // Add also student to the RIGHT as she/he also has
-																	// cheating possibility
+						if (i > 0) { // Check if it is not the first row, if not, then check students below
+							if (students.get(i - 1).get(j - 1) != null && // Checks if student to the BELOW LEFT exists
+									studentX.getAnswers().equals(students.get(i - 1).get(j - 1).getAnswers())) // if so,
+																											// compares
+																											// their
+																											// answers
+								suspicious.add(studentX);
+
+							if (students.get(i - 1).get(j) != null && // Checks if student DIRECTLY BELOW exists and, if
+																		// so,
+																		// compares their answers
+									studentX.getAnswers().equals(students.get(i - 1).get(j).getAnswers()))
+								suspicious.add(studentX);
+
+							if (j != lastTakenSeat && students.get(i - 1).get(j + 1) != null && // Checks if student to
+																								// the BELOW RIGHT
+																								// exists and, if
+							// so, compares their answers
+									studentX.getAnswers().equals(students.get(i - 1).get(j + 1).getAnswers()))
+								suspicious.add(studentX);
+						}
 					}
-					
-					if (i > 0) { // Check if it is not the first row, if not, then check students below
-						if (j != 0 && students.get(i + 1).get(j - 1) != null && // Checks if student to the BELOW LEFT exists
-								studentX.getAnswers().equals(students.get(i).get(j - 1).getAnswers())) // if so,
-																									// compares
-																									// their answers
+
+					if (j != lastTakenSeat) { // Checks if it's not the rightmost seat
+
+						if (students.get(i).get(j + 1) != null && // Checks if student to the RIGHT exists
+
+								studentX.getAnswers().equals(students.get(i).get(j + 1).getAnswers())) {// if so,
+																										// compares
+																										// their
+																										// answers
 							suspicious.add(studentX);
-						
-						if (students.get(i - 1).get(j) != null && // Checks if student DIRECTLY BELOW exists and, if so,
-																// compares their answers
-								studentX.getAnswers().equals(students.get(i - 1).get(j).getAnswers()))
-							suspicious.add(studentX);
-						
-						if (students.get(i - 1).get(j + 1) != null && // Checks if student to the BELOW RIGHT exists and, if
-																// so, compares their answers
-								studentX.getAnswers().equals(students.get(i - 1).get(j + 1).getAnswers()))
-							suspicious.add(studentX);
+							suspicious.add(students.get(i).get(j + 1)); // Add also student to the RIGHT as she/he also
+																		// has
+																		// cheating possibility
+						}
+
+						if (i > 0) { // Check if it is not the first row, if not, then check students below
+							if (j != 0 && students.get(i - 1).get(j - 1) != null && // Checks if student to the BELOW
+																					// LEFT exists
+									studentX.getAnswers().equals(students.get(i - 1).get(j - 1).getAnswers())) // if so,
+																											// compares
+																											// their
+																											// answers
+								suspicious.add(studentX);
+
+							if (students.get(i - 1).get(j) != null && // Checks if student DIRECTLY BELOW exists and, if
+																		// so,
+																		// compares their answers
+									studentX.getAnswers().equals(students.get(i - 1).get(j).getAnswers()))
+								suspicious.add(studentX);
+
+							if (students.get(i - 1).get(j + 1) != null && // Checks if student to the BELOW RIGHT exists
+																			// and, if
+							// so, compares their answers
+									studentX.getAnswers().equals(students.get(i - 1).get(j + 1).getAnswers()))
+								suspicious.add(studentX);
+						}
 					}
 				}
 			}
@@ -189,7 +205,6 @@ public class Main {
 		int numberOfRows = posX(students.get(students.size() - 1));
 
 		ArrayList<ArrayList<Student>> studentsMatrix = new ArrayList<>(numberOfRows);
-		System.out.println(numberOfRows);
 
 //   Initializing rows
 
@@ -211,17 +226,6 @@ public class Main {
 			} else
 				studentsMatrix.get(x).add(student);
 		});
-
-		for (int i = 0; i < studentsMatrix.size(); i++) {
-			for (int j = 0; j < studentsMatrix.get(i).size(); j++) {
-				if (studentsMatrix.get(i).get(j) != null)
-					System.out.print(studentsMatrix.get(i).get(j).getSittingLocation() + "   ");
-				else
-					System.out.print("nul   ");
-			}
-			System.out.println("\n");
-		}
-
 		return studentsMatrix;
 
 	}
