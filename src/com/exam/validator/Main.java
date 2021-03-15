@@ -63,83 +63,50 @@ public class Main {
     public static void main(String[] args) {
         List<Student> students = CSVReader.parse();
         
-//	Sorts students list according to their seating position (accending order 1.1, 1.2 ... 2.1, 2.2 ...
-        students.sort(new Comparator<Student>() {
-
-			@Override
-			public int compare(Student o1, Student o2) {
-				if (posX(o1) == posX(o2))
-					if (posY(o1) < posY(o2)) return -1;
-					else if (posY(o1) > posY(o2)) return 1;
-					else return 0;
-				else if (posX(o1) < posX(o2)) return -1;
-				else return 1;
-			}
-        });
-        
-        students.forEach(student -> System.out.println(student));
-
-        toMatrix(students);
-        
+       
         
     }
     
   
     
-//    Returns sitting row number in integer 
+//    Returns position in integer array[x,y] 
     
-    public static int posX (Student student) {
-    	return Integer.parseInt(student.getSittingLocation().split("\\.")[0]);
+    public static int[] locToInt (String location) {
+    	
+    	String[] xy = location.split("\\."); 
+    	    	 	
+    	return new int[] {Integer.parseInt(xy[0]),Integer.parseInt(xy[1])};
     }
     
-//  Returns sitting position in row in integer 
+//  Returns position in string
     
-	public static int posY (Student student) {
-		return Integer.parseInt(student.getSittingLocation().split("\\.")[1]);
+	public static String locToStr(int row, int seat) {
+		
+		return Integer.toString(row) + "." + Integer.toString(seat);
 	}	
-    
-//	Creating two dimensional arrayList, which represents student seating in auditorium
 	
-    public static ArrayList<ArrayList<Student>> toMatrix(List<Student> students){
+//	Returns particular student in sitting location
+	
+    public static Student comparableStudent(List<Student> students, String position) {
     	
-    	int numberOfRows = posX(students.get(students.size() - 1));
-    	
-    	ArrayList<ArrayList<Student>> studentsMatrix = new ArrayList<>(numberOfRows);
-    	System.out.println(numberOfRows);
-    	
-//   Initializing rows
-    	
-    	for (int i = 0; i < numberOfRows; i ++) {
-    		studentsMatrix.add(new ArrayList<>());
+    	for (Student student : students) {
+    		if (student.getSittingLocation().equals(position)) return student;
     	}
-    	
-//    	Adding students to rows
-    	
-    	students.forEach(student ->{
-    		int x = posX(student)-1;
-    		int y = posY(student)-1;
-
-//    		Checks if there is empty seating
-    		
-    		if (y > studentsMatrix.get(x).size()) {
-    			studentsMatrix.get(x).add(null);
-    			studentsMatrix.get(x).add(student);
-    		}
-    		else studentsMatrix.get(x).add(student);
-    	});
-    	
-    	for (int i = 0; i < studentsMatrix.size(); i++) {
-    		for (int j = 0; j < studentsMatrix.get(i).size(); j++) {
-    			if (studentsMatrix.get(i).get(j) != null) 
-    			System.out.print(studentsMatrix.get(i).get(j).getSittingLocation() + "   ");
-    			else System.out.print("nul   ");
-    		}
-    		System.out.println("\n");
-    	}
-    	
-    	return studentsMatrix;
-    	
+    	return null; 
     }
+    
+    
+    
+    public static List<Student> checkNeighbors(List<Student> students, Student student){
+    	
+    	List<Student> possibleCheaters = new ArrayList<>();
+    	int[] loc = locToInt(student.getSittingLocation());
+    	
+    	
+    			
+    	return possibleCheaters;
+    }
+    
 }
 
 class Student {
